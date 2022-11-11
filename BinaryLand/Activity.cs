@@ -10,9 +10,10 @@ namespace BinaryLand
         Label = "@string/app_name",
         MainLauncher = true,
         Icon = "@drawable/icon",
+        Theme = "@style/Theme.Splash",
         AlwaysRetainTaskState = true,
         LaunchMode = LaunchMode.SingleInstance,
-        ScreenOrientation = ScreenOrientation.FullUser,
+        ScreenOrientation = ScreenOrientation.SensorLandscape,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize
     )]
     public class Activity : AndroidGameActivity
