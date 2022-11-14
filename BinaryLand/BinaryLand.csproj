@@ -3,13 +3,36 @@
     <TargetFramework>net7.0-android</TargetFramework>
     <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
     <OutputType>Exe</OutputType>
-    <ApplicationId>com.companyname.BinaryLand</ApplicationId>
+    <ApplicationId>com.blinksun.binaryland</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
   </PropertyGroup>
   <ItemGroup>
+    <AndroidJavaSource Remove="Content\bin\**" />
+    <AndroidJavaSource Remove="Content\obj\**" />
+    <AndroidLibrary Remove="Content\bin\**" />
+    <AndroidLibrary Remove="Content\obj\**" />
+    <AndroidNativeLibrary Remove="Content\bin\**" />
+    <AndroidNativeLibrary Remove="Content\obj\**" />
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <JavaSourceJar Remove="Content\bin\**" />
+    <JavaSourceJar Remove="Content\obj\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+    <ProguardConfiguration Remove="Content\bin\**" />
+    <ProguardConfiguration Remove="Content\obj\**" />
+    <TransformFile Remove="Content\bin\**" />
+    <TransformFile Remove="Content\obj\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Sprites\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
