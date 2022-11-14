@@ -1,5 +1,4 @@
 ﻿using Android.Views;
-using BinaryLand.GameObjects;
 using BinaryLand.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,9 +10,9 @@ namespace BinaryLand
     public class BinaryLandGame : Game
     {
         // Resources for drawing.
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        Vector2 baseScreenSize = new Vector2(800, 480);
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        Vector2 baseScreenSize = new (800, 480);
         private Matrix globalTransformation;
         int backbufferWidth, backbufferHeight;
 
@@ -33,7 +32,7 @@ namespace BinaryLand
 
         public BinaryLandGame()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -47,7 +46,8 @@ namespace BinaryLand
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            ScalePresentationArea();
 
             // Load fonts
             hudFont = Content.Load<SpriteFont>("Fonts/heartspritefont");
@@ -57,14 +57,13 @@ namespace BinaryLand
             //loseOverlay = Content.Load<Texture2D>("Overlays/you_lose");
             //diedOverlay = Content.Load<Texture2D>("Overlays/you_died");
 
-            ScalePresentationArea();
 
             //float aliveZoneFollowFactor = 1.3f, float aliveZoneFollowSpeed = 0.05f, float edgeSpacing = 25f, float aliveZoneSize = 65f, float deadZoneSize = 5f
             Stick = new (Content.Load<Texture2D>("Sprites/arrows"), 5f, new Rectangle(0, 100, (int)(TouchPanel.DisplayWidth * 0.3f), TouchPanel.DisplayHeight - 100), 65f, 1.3f, 0.05f, 25f);
             Stick.FixedLocation = new Vector2(65f * 1.3f, TouchPanel.DisplayHeight - 65f * 1.3f);
             Stick.SetAsFree();
 
-            //virtualGamePad = new VirtualGamePad(baseScreenSize, globalTransformation, Content.Load<Texture2D>("Sprites/arrows"));
+            virtualGamePad = new VirtualGamePad(baseScreenSize, globalTransformation, Content.Load<Texture2D>("Sprites/arrows"));
         }
 
         public void ScalePresentationArea()
@@ -115,7 +114,7 @@ namespace BinaryLand
             totalTime += dt;
 
             var state = TouchPanel.GetState();
-            TouchLocation? leftTouch = null, rightTouch = null;
+            TouchLocation? leftTouch = null;
 
             if (tapStartCount > state.Count)
                 tapStartCount = state.Count;
@@ -152,11 +151,6 @@ namespace BinaryLand
                     leftTouch = loc;
                     continue;
                 }
-                //if (RightStick.touchLocation.HasValue && loc.Id == RightStick.touchLocation.Value.Id)
-                //{
-                //    rightTouch = loc;
-                //    continue;
-                //}
 
                 if (!loc.TryGetPreviousLocation(out TouchLocation locPrev))
                     locPrev = loc;
@@ -184,43 +178,6 @@ namespace BinaryLand
                         continue;
                     }
                 }
-
-                //if (!RightStick.touchLocation.HasValue && locPrev.Id != RightStick.lastExcludedRightTouchId)
-                //{
-                //    if (RightStick.StartRegion.Contains((int)locPrev.Position.X, (int)locPrev.Position.Y))
-                //    {
-                //        bool excluded = false;
-                //        foreach (Rectangle r in RightStick.startExcludeRegions)
-                //        {
-                //            if (r.Contains((int)locPrev.Position.X, (int)locPrev.Position.Y))
-                //            {
-                //                excluded = true;
-                //                RightStick.lastExcludedRightTouchId = locPrev.Id;
-                //                continue;
-                //            }
-                //        }
-                //        if (excluded)
-                //            continue;
-                //        RightStick.lastExcludedRightTouchId = -1;
-                //        if (RightStick.Style == TouchStickStyle.Fixed)
-                //        {
-                //            if (Vector2.Distance(locPrev.Position, RightStick.StartLocation) < aliveZoneSize)
-                //            {
-                //                rightTouch = locPrev;
-                //            }
-                //        }
-                //        else
-                //        {
-                //            rightTouch = locPrev;
-                //            RightStick.StartLocation = rightTouch.Value.Position;
-                //            if (RightStick.StartLocation.X > RightStick.StartRegion.Right - edgeSpacing)
-                //                RightStick.StartLocation.X = RightStick.StartRegion.Right - edgeSpacing;
-                //            if (RightStick.StartLocation.Y > RightStick.StartRegion.Bottom - edgeSpacing)
-                //                RightStick.StartLocation.Y = RightStick.StartRegion.Bottom - edgeSpacing;
-                //        }
-                //        continue;
-                //    }
-                //}
             }
 
             Stick.Update(state, leftTouch, dt);
@@ -228,6 +185,9 @@ namespace BinaryLand
 
         protected override void Draw(GameTime gameTime)
         {
+            Rectangle titleSafeArea = GraphicsDevice.Viewport.TitleSafeArea;
+            Vector2 hudLocation = new Vector2(titleSafeArea.X, titleSafeArea.Y);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //_spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);
@@ -238,9 +198,9 @@ namespace BinaryLand
 
             //_spriteBatch.End();
 
-            _spriteBatch.Begin();
-            Stick.Draw(_spriteBatch);
-            _spriteBatch.End();
+            spriteBatch.Begin();
+            Stick.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -300,7 +260,7 @@ namespace BinaryLand
             //}
 
             if (touchState.IsConnected)
-                virtualGamePad.Draw(_spriteBatch);
+                virtualGamePad.Draw(spriteBatch);
         }
     }
 }
